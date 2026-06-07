@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { COLORS, NAV_ITEMS, LINKS, IELTS_SECTIONS, BAND_GUIDE, VISA_TYPES, COST_OF_LIVING, REFLECTIONS, COMMUNITIES, FILIPINO_SPOTLIGHT } from '../lib/data'
+import { COLORS, NAV_ITEMS, LINKS, IELTS_SECTIONS, BAND_GUIDE, VISA_TYPES, COST_OF_LIVING, REFLECTIONS, FILIPINO_STATS } from '../lib/data'
 
 export default function PathwayNZ() {
   const [page, setPage]             = useState('home')
@@ -11,7 +11,9 @@ export default function PathwayNZ() {
   const [votdError, setVotdError]   = useState(false)
   const [activeLink, setActiveLink] = useState(null)
 
-  const todayReflection = REFLECTIONS[new Date().getDay() % REFLECTIONS.length]
+  // Use day of month (1–31) so reflection changes every calendar day
+  const dayOfMonth = new Date().getDate() // 1–31
+  const todayReflection = REFLECTIONS[(dayOfMonth - 1) % REFLECTIONS.length]
 
   useEffect(() => {
     if (page === 'devotion' && !votd && !votdLoading) {
@@ -54,7 +56,7 @@ export default function PathwayNZ() {
             <div style={{ width: 32, height: 32, background: COLORS.gold, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🥝</div>
             <div>
               <div className="pf" style={{ color: COLORS.white, fontSize: 16, fontWeight: 800, lineHeight: 1 }}>PathwayNZ</div>
-              <div className="it" style={{ color: COLORS.goldLight, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase' }}>Your Guide to New Zealand</div>
+              <div className="it" style={{ color: COLORS.goldLight, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase' }}>Para sa mga Pilipino sa NZ</div>
             </div>
           </button>
           <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
@@ -80,15 +82,18 @@ export default function PathwayNZ() {
               <div style={{ position: 'relative', maxWidth: 640 }}>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18 }}>
                   <div className="tag" style={{ background: '#c8922a18', color: COLORS.gold }}>pathway.wesstech.xyz</div>
-                  <div className="tag" style={{ background: '#0d737718', color: COLORS.teal }}>Free Resource</div>
+                  <div className="tag" style={{ background: '#dc262618', color: COLORS.red }}>🇵🇭 Para sa mga Pilipino</div>
                 </div>
                 <h1 className="pf" style={{ fontSize: 'clamp(30px,5.5vw,54px)', fontWeight: 800, lineHeight: 1.1, marginBottom: 16, color: COLORS.navy }}>
-                  Your Guide to a<br /><span style={{ color: COLORS.gold }}>New Life in New Zealand</span>
+                  Ang Iyong Gabay sa<br /><span style={{ color: COLORS.gold }}>Bagong Buhay sa New Zealand</span>
                 </h1>
                 <p className="it" style={{ fontSize: 16, color: COLORS.muted, maxWidth: 520, lineHeight: 1.8, marginBottom: 12 }}>
-                  For everyone making New Zealand home — IELTS preparation, visa guides, settling-in tips, and daily inspiration. Built for all migrants, with special love for the Filipino community.
+                  Everything a Filipino needs to start a new life in New Zealand — IELTS preparation, visa guides, settling-in tips, daily devotion, and Filipino community resources. Free, always.
                 </p>
-                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 24 }}>
+                <div style={{ background: COLORS.goldSoft, borderRadius: 10, padding: '10px 16px', marginBottom: 20, display: 'inline-block' }}>
+                  <span className="it" style={{ fontSize: 13, color: COLORS.gold }}>💡 Tagalog toggle available on the Devotion page</span>
+                </div>
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 8 }}>
                   <button onClick={() => nav('ielts')} className="it" style={{ background: COLORS.navy, color: COLORS.white, border: 'none', borderRadius: 9, padding: '11px 22px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Start IELTS Prep →</button>
                   <button onClick={() => nav('immigration')} className="it" style={{ background: COLORS.teal, color: COLORS.white, border: 'none', borderRadius: 9, padding: '11px 22px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Visa Guide →</button>
                   <button onClick={() => nav('devotion')} className="it" style={{ background: '#c8922a18', color: COLORS.gold, border: `1.5px solid ${COLORS.gold}`, borderRadius: 9, padding: '11px 22px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Today's Devotion 🙏</button>
@@ -96,48 +101,29 @@ export default function PathwayNZ() {
               </div>
             </div>
 
-            {/* Who we serve */}
-            <Sec title="Built for All Migrants to New Zealand">
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 10 }}>
-                {COMMUNITIES.map((c, i) => (
-                  <div key={i} style={{ background: COLORS.cardBg, border: `1px solid ${COLORS.border}`, borderRadius: 14, padding: '16px 14px', textAlign: 'center' }}>
-                    <div style={{ fontSize: 28, marginBottom: 8 }}>{c.flag}</div>
-                    <div className="it" style={{ fontWeight: 700, color: COLORS.navy, fontSize: 14, marginBottom: 4 }}>{c.name}</div>
-                    <div className="it" style={{ fontSize: 12, color: COLORS.muted, lineHeight: 1.5 }}>{c.desc}</div>
-                  </div>
-                ))}
+            {/* Filipino stats strip */}
+            <div style={{ background: `linear-gradient(135deg,#0f2744,#1a3a5c)`, borderRadius: 16, padding: '20px 24px', marginBottom: 24, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
+              <div style={{ flex: '0 0 100%', marginBottom: 14 }}>
+                <div className="tag" style={{ background: '#dc262620', color: '#fca5a5', marginBottom: 4 }}>🇵🇭 Filipinos in New Zealand</div>
               </div>
-            </Sec>
-
-            {/* Filipino spotlight */}
-            <div style={{ background: `linear-gradient(135deg, #0f2744, #1a3a5c)`, borderRadius: 20, padding: '28px 28px', marginBottom: 32, position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', right: -20, top: -20, fontSize: 120, opacity: .06 }}>🇵🇭</div>
-              <div className="tag" style={{ background: '#dc262620', color: '#fca5a5', marginBottom: 12 }}>Filipino Spotlight</div>
-              <h3 className="pf" style={{ fontSize: 20, fontWeight: 700, color: COLORS.white, marginBottom: 6 }}>{FILIPINO_SPOTLIGHT.title}</h3>
-              <p className="it" style={{ color: '#94a3b8', fontSize: 13, marginBottom: 20, lineHeight: 1.6 }}>{FILIPINO_SPOTLIGHT.subtitle}</p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: 10, marginBottom: 16 }}>
-                {FILIPINO_SPOTLIGHT.stats.map((s, i) => (
-                  <div key={i} style={{ background: '#ffffff0d', borderRadius: 10, padding: '12px 14px', textAlign: 'center' }}>
-                    <div className="pf" style={{ fontSize: 22, fontWeight: 800, color: COLORS.goldLight }}>{s.value}</div>
-                    <div className="it" style={{ fontSize: 11, color: '#94a3b8', marginTop: 4, lineHeight: 1.4 }}>{s.label}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ background: '#ffffff0a', borderRadius: 10, padding: '10px 14px' }}>
-                <span className="it" style={{ fontSize: 12.5, color: '#cbd5e1' }}>💡 {FILIPINO_SPOTLIGHT.tip}</span>
-              </div>
+              {FILIPINO_STATS.map((s, i) => (
+                <div key={i} style={{ flex: '1 1 120px', textAlign: 'center', padding: '8px 12px', borderRight: i < FILIPINO_STATS.length - 1 ? '1px solid #1e3a5c' : 'none' }}>
+                  <div className="pf" style={{ fontSize: 22, fontWeight: 800, color: COLORS.goldLight }}>{s.value}</div>
+                  <div className="it" style={{ fontSize: 11, color: '#64748b', marginTop: 3, lineHeight: 1.4 }}>{s.label}</div>
+                </div>
+              ))}
             </div>
 
             {/* Section cards */}
-            <Sec title="What You'll Find Here">
+            <Sec title="Lahat ng Kailangan Mo — Everything You Need">
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 12 }}>
                 {[
-                  { id:'ielts',       icon:'🎓', title:'IELTS Prep',      desc:'Band guides, skill tips, 4-week study plan',            color: COLORS.teal   },
-                  { id:'immigration', icon:'🛂', title:'NZ Immigration',  desc:'Visa types, step-by-step guides, doc checklists',       color: COLORS.red    },
-                  { id:'settling',    icon:'🏡', title:'Settling In NZ',  desc:'IRD, banking, cost of living, communities',             color: COLORS.gold   },
-                  { id:'future',      icon:'🌱', title:'Your Future',     desc:'Residency pathway, citizenship, family reunification',  color: COLORS.green  },
-                  { id:'devotion',    icon:'🙏', title:'Daily Devotion',  desc:'Live Bible verse + reflection for the migrant journey', color: COLORS.violet },
-                  { id:'links',       icon:'🔗', title:'Helpful Links',   desc:'Official sites, communities, jobs, resources',         color: COLORS.navy   },
+                  { id:'ielts',       icon:'🎓', title:'IELTS Prep',         desc:'Band guides, tips for all 4 skills, 4-week study plan',              color: COLORS.teal   },
+                  { id:'immigration', icon:'🛂', title:'NZ Immigration',     desc:'Visa types, step-by-step guides, document checklists',               color: COLORS.red    },
+                  { id:'settling',    icon:'🏡', title:'Settling In NZ',     desc:'IRD, banking, cost of living in NZD & PHP, Filipino communities',    color: COLORS.gold   },
+                  { id:'future',      icon:'🌱', title:'Your Future in NZ',  desc:'Residency pathway, citizenship, bringing family to NZ',              color: COLORS.green  },
+                  { id:'devotion',    icon:'🙏', title:'Daily Devotion',     desc:'Live Bible verse + reflection in English & Tagalog — for Filipinos', color: COLORS.violet },
+                  { id:'links',       icon:'🔗', title:'Filipino Links',     desc:'PH Consulate, OFW groups, IELTS PH, remittance, job boards',        color: COLORS.navy   },
                 ].map(c => (
                   <div key={c.id} className="ch" onClick={() => nav(c.id)}
                     style={{ background: COLORS.cardBg, border: `1.5px solid ${COLORS.border}`, borderRadius: 16, padding: '20px 16px', borderTop: `3px solid ${c.color}` }}>
@@ -158,7 +144,7 @@ export default function PathwayNZ() {
         {/* ══ IELTS ══ */}
         {page === 'ielts' && (
           <div className="fi" style={{ paddingTop: 40 }}>
-            <PageHeader icon="🎓" tag="IELTS Preparation" title="Pass Your IELTS Exam" subtitle="Practical tips for all four skills — same test worldwide, same strategies that work." color={COLORS.teal} />
+            <PageHeader icon="🎓" tag="IELTS Preparation" title="I-Pass ang IELTS Mo" subtitle="Practical tips for all four skills — written specifically for Filipino test-takers heading to New Zealand." color={COLORS.teal} />
 
             <Sec title="Band Score Guide for NZ Visas">
               <div className="sx">
@@ -232,7 +218,7 @@ export default function PathwayNZ() {
         {/* ══ IMMIGRATION ══ */}
         {page === 'immigration' && (
           <div className="fi" style={{ paddingTop:40 }}>
-            <PageHeader icon="🛂" tag="NZ Immigration Guide" title="Getting Your Visa to New Zealand" subtitle="Plain English guides for migrants from any country — no jargon, no confusion." color={COLORS.red} />
+            <PageHeader icon="🛂" tag="NZ Immigration Guide" title="Paano Makakuha ng Visa sa NZ" subtitle="Plain English guides written for Filipinos — walang jargon, walang kalituhan." color={COLORS.red} />
 
             <Sec title="Common Visa Types">
               <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(250px,1fr))', gap:12 }}>
@@ -300,7 +286,7 @@ export default function PathwayNZ() {
         {/* ══ SETTLING IN ══ */}
         {page === 'settling' && (
           <div className="fi" style={{ paddingTop:40 }}>
-            <PageHeader icon="🏡" tag="Settling In NZ" title="Your First 30 Days in New Zealand" subtitle="A practical week-by-week checklist for any new arrival." color={COLORS.gold} />
+            <PageHeader icon="🏡" tag="Settling In NZ" title="Ang Unang 30 Araw sa New Zealand" subtitle="A week-by-week checklist para sa mga bagong dating na Pilipino — with NZD to PHP cost comparisons." color={COLORS.gold} />
 
             {[
               { week:'Week 1 — Do These First', color:COLORS.red, tasks:['Apply for IRD number at ird.govt.nz','Open a bank account (ANZ, ASB, BNZ, or Kiwibank)','Get a local SIM card (Skinny or 2degrees — cheapest)','Register with a GP (doctor) — free for work/resident visa holders','Find a migrant support service or community group near you'] },
@@ -319,23 +305,24 @@ export default function PathwayNZ() {
               </Sec>
             ))}
 
-            <Sec title="Cost of Living in NZ">
+            <Sec title="Cost of Living — NZD at PHP">
               <div className="sx">
                 <table style={{ width:'100%', borderCollapse:'collapse', minWidth:500 }}>
                   <thead><tr style={{ background: COLORS.navy }}>
-                    {['Expense','NZD Cost','Tip'].map(h => <th key={h} className="it" style={{ padding:'11px 16px', color: COLORS.white, textAlign:'left', fontSize:12.5, fontWeight:600 }}>{h}</th>)}
+                    {['Expense','NZD Cost','PHP Equivalent'].map(h => <th key={h} className="it" style={{ padding:'11px 16px', color: COLORS.white, textAlign:'left', fontSize:12.5, fontWeight:600 }}>{h}</th>)}
                   </tr></thead>
                   <tbody>
                     {COST_OF_LIVING.map((c,i) => (
-                      <tr key={i} style={{ background: i%2===0 ? COLORS.cardBg : '#f8fafc', borderBottom:`1px solid ${COLORS.border}` }}>
+                      <tr key={i} style={{ background: i%2===0 ? COLORS.cardBg : '#fdf6ee', borderBottom:`1px solid ${COLORS.border}` }}>
                         <td className="it" style={{ padding:'11px 16px', fontSize:13 }}>{c.item}</td>
                         <td className="it" style={{ padding:'11px 16px', fontSize:13, fontWeight:700, color: COLORS.teal }}>{c.nzd}</td>
-                        <td className="it" style={{ padding:'11px 16px', fontSize:12, color: COLORS.muted }}>{c.note}</td>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:13, color: COLORS.muted }}>{c.php}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+              <p className="it" style={{ fontSize:12, color: COLORS.dimmed, marginTop:8 }}>* Approx: 1 NZD ≈ ₱30.7 PHP. Rates change — check Wise for today's rate.</p>
             </Sec>
 
             {/* Filipino community callout */}
@@ -358,7 +345,7 @@ export default function PathwayNZ() {
         {/* ══ FUTURE ══ */}
         {page === 'future' && (
           <div className="fi" style={{ paddingTop:40 }}>
-            <PageHeader icon="🌱" tag="Building Your Future" title="From Work Visa to NZ Citizenship" subtitle="The full pathway from your first visa to becoming a New Zealander — for any migrant." color={COLORS.green} />
+            <PageHeader icon="🌱" tag="Building Your Future" title="Mula Work Visa Hanggang Citizenship" subtitle="The full pathway from your first NZ visa to becoming a New Zealander — para sa mga Pilipino." color={COLORS.green} />
 
             <Sec title="The Residency Pathway">
               {[
@@ -404,7 +391,7 @@ export default function PathwayNZ() {
         {/* ══ DEVOTION ══ */}
         {page === 'devotion' && (
           <div className="fi" style={{ paddingTop:40 }}>
-            <PageHeader icon="🙏" tag="Daily Devotion" title="Strength for the Journey" subtitle="A daily verse and reflection for anyone navigating the migrant journey — wherever you are from, whatever you believe." color={COLORS.violet} />
+            <PageHeader icon="🙏" tag="Daily Devotion" title="Pananampalataya para sa Paglalakbay" subtitle="Isang araw-araw na talata at pagninilay para sa mga Pilipinong nagtatayo ng bagong buhay sa New Zealand." color={COLORS.violet} />
 
             {/* Verse card */}
             <div style={{ background:`linear-gradient(160deg,${COLORS.navy} 0%,#1a3a5c 100%)`, borderRadius:22, padding:'36px 30px', position:'relative', overflow:'hidden', marginBottom:18 }}>
@@ -452,7 +439,7 @@ export default function PathwayNZ() {
                   <div style={{ background:'#ffffff0a', borderRadius:12, padding:'18px 18px', borderTop:`2px solid ${COLORS.gold}33` }}>
                     <div className="tag" style={{ background:'#7c3aed18', color:'#c4b5fd', marginBottom:10 }}>A Prayer for Migrants</div>
                     <p className="it" style={{ color:'#e2e8f0', fontSize:13.5, lineHeight:1.9, fontStyle:'italic' }}>
-                      May you find strength for today, hope for tomorrow, and peace in knowing that your journey — as hard as it is — is not walked alone. May the family you left behind feel your love across every mile. And may the country you are building a life in become a true home. Amen.
+                      Panginoon, salamat sa salitang ito ngayon. Habang itinatayo ko ang aking buhay sa New Zealand, paalaala Mo sa akin na kasama Mo ako sa bawat hakbang — sa bawat papel na pinupunan ko, bawat trabaho, bawat gabing namimiss ko ang aking pamilya sa Pilipinas. Bigyan Mo ako ng lakas ngayon at pag-asa bukas. Pagpalain ang aking pamilya saan man sila naroroon. Amen. / Lord, thank You for this word today. As I build my life in New Zealand, remind me that You walk with me in every step — every form I fill, every shift I work, every night I miss my family in the Philippines. Give me strength for today and hope for tomorrow. Bless my family wherever they are. Amen.
                     </p>
                   </div>
                 </>
@@ -473,7 +460,7 @@ export default function PathwayNZ() {
         {/* ══ LINKS ══ */}
         {page === 'links' && (
           <div className="fi" style={{ paddingTop:40 }}>
-            <PageHeader icon="🔗" tag="Helpful Links" title="All the Links You Need" subtitle="Official sites, community groups, job boards, and resources — for all migrants, with Filipino highlights." color={COLORS.navy} />
+            <PageHeader icon="🔗" tag="Mga Kapaki-pakinabang na Links" title="Lahat ng Links na Kailangan Mo" subtitle="Official NZ sites, Philippine Consulate, OFW groups, IELTS registration in the Philippines, job boards, and more." color={COLORS.navy} />
 
             {/* Category filter tabs */}
             <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:28 }}>
@@ -506,7 +493,7 @@ export default function PathwayNZ() {
             <div>
               <div className="pf" style={{ color: COLORS.goldLight, fontSize:20, fontWeight:700, marginBottom:6 }}>PathwayNZ</div>
               <p className="it" style={{ color:'#475569', fontSize:12, maxWidth:300, lineHeight:1.7 }}>
-                A free guide for all migrants to New Zealand — with special focus on the Filipino community.
+                A free guide for Filipinos building a new life in New Zealand — IELTS, immigration, community, and daily devotion. Para sa mga Pilipino, libre palagi.
               </p>
             </div>
             <div style={{ display:'flex', gap:8, flexWrap:'wrap', alignContent:'flex-start' }}>
