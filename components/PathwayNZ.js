@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { COLORS, NAV_ITEMS, LINKS, IELTS_SECTIONS, BAND_GUIDE, VISA_TYPES, COST_OF_LIVING, REFLECTIONS, FILIPINO_STATS } from '../lib/data'
+import { COLORS, NAV_ITEMS, LINKS, IELTS_SECTIONS, BAND_GUIDE, VISA_TYPES, COST_OF_LIVING, REFLECTIONS, FILIPINO_STATS, UNIVERSITIES, STUDENT_COSTS, STUDENT_PATHWAY_STEPS, WORK_RULES } from '../lib/data'
 
 export default function PathwayNZ() {
   const [page, setPage]             = useState('home')
@@ -120,6 +120,7 @@ export default function PathwayNZ() {
                 {[
                   { id:'ielts',       icon:'🎓', title:'IELTS Prep',         desc:'Band guides, tips for all 4 skills, 4-week study plan',              color: COLORS.teal   },
                   { id:'immigration', icon:'🛂', title:'NZ Immigration',     desc:'Visa types, step-by-step guides, document checklists',               color: COLORS.red    },
+                  { id:'student',     icon:'🎒', title:'Student Pathway',    desc:'Study in NZ, student visa, post-study work, path to residency',      color: COLORS.blue   },
                   { id:'settling',    icon:'🏡', title:'Settling In NZ',     desc:'IRD, banking, cost of living in NZD & PHP, Filipino communities',    color: COLORS.gold   },
                   { id:'future',      icon:'🌱', title:'Your Future in NZ',  desc:'Residency pathway, citizenship, bringing family to NZ',              color: COLORS.green  },
                   { id:'devotion',    icon:'🙏', title:'Daily Devotion',     desc:'Live Bible verse + reflection in English & Tagalog — for Filipinos', color: COLORS.violet },
@@ -279,6 +280,166 @@ export default function PathwayNZ() {
 
             <Sec title="Official Immigration Links">
               <LinkGrid items={LINKS.find(l=>l.category.includes('NZ Immigration')).items} color={COLORS.red} />
+            </Sec>
+
+            {/* Student pathway callout */}
+            <div style={{ background:`linear-gradient(135deg,#1e3a8a,#1d4ed8)`, borderRadius:16, padding:'24px 24px', marginTop:8 }}>
+              <div className="tag" style={{ background:'#ffffff18', color:'#bfdbfe', marginBottom:10 }}>🎒 Student Pathway</div>
+              <h3 className="pf" style={{ fontSize:19, fontWeight:700, color:COLORS.white, marginBottom:8 }}>Planning to Study in NZ First?</h3>
+              <p className="it" style={{ color:'#93c5fd', fontSize:13.5, lineHeight:1.7, marginBottom:16 }}>
+                Studying in NZ is one of the strongest pathways to residency. A NZ degree adds 50 points to your Skilled Migrant application. We have a full guide covering student visas, top universities, costs, part-time work rules, and the step-by-step path from student to resident.
+              </p>
+              <button onClick={() => nav('student')} className="it" style={{ background:COLORS.white, color:'#1d4ed8', border:'none', borderRadius:8, padding:'9px 18px', fontSize:12.5, fontWeight:700, cursor:'pointer' }}>
+                View Full Student Pathway Guide →
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ══ STUDENT PATHWAY ══ */}
+        {page === 'student' && (
+          <div className="fi" style={{ paddingTop:40 }}>
+            <PageHeader icon="🎒" tag="Student Pathway" title="Mag-aral sa New Zealand" subtitle="Your complete guide — from choosing a course in the Philippines to graduating and getting NZ residency." color={COLORS.blue} />
+
+            {/* Key facts strip */}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))', gap:10, marginBottom:32 }}>
+              {[
+                { value:'IELTS 5.5+', label:'Minimum for most institutions' },
+                { value:'20 hrs/wk',  label:'Part-time work allowed during study' },
+                { value:'1–3 years',  label:'Post-study work visa after graduation' },
+                { value:'+50 pts',    label:'NZ degree adds to SMC residency points' },
+              ].map((s,i) => (
+                <div key={i} style={{ background:COLORS.cardBg, border:`1px solid ${COLORS.border}`, borderRadius:12, padding:'14px 14px', textAlign:'center', borderTop:`3px solid ${COLORS.blue}` }}>
+                  <div className="pf" style={{ fontSize:20, fontWeight:800, color:COLORS.blue }}>{s.value}</div>
+                  <div className="it" style={{ fontSize:11, color:COLORS.muted, marginTop:4, lineHeight:1.4 }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* 8-step pathway */}
+            <Sec title="Step-by-Step: From Philippines to NZ Residency via Study">
+              {STUDENT_PATHWAY_STEPS.map((s,i) => (
+                <div key={i} style={{ display:'flex', gap:16, marginBottom:12, alignItems:'flex-start' }}>
+                  <div style={{ width:42, height:42, borderRadius:'50%', background:s.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, flexShrink:0 }}>{s.icon}</div>
+                  <div style={{ background:COLORS.cardBg, border:`1px solid ${COLORS.border}`, borderRadius:12, padding:'14px 18px', flex:1, borderLeft:`4px solid ${s.color}` }}>
+                    <div className="tag" style={{ background:s.color+'18', color:s.color, marginBottom:5 }}>Step {s.step}</div>
+                    <h4 className="pf" style={{ fontSize:16, fontWeight:700, color:COLORS.navy, marginBottom:5 }}>{s.title}</h4>
+                    <p className="it" style={{ fontSize:13, color:COLORS.muted, lineHeight:1.65, marginBottom:8 }}>{s.desc}</p>
+                    <div style={{ background:s.color+'12', borderRadius:8, padding:'8px 12px', display:'flex', gap:8 }}>
+                      <span style={{ color:s.color, flexShrink:0 }}>💡</span>
+                      <span className="it" style={{ fontSize:12, color:COLORS.muted, lineHeight:1.5 }}>{s.tip}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Sec>
+
+            {/* Universities */}
+            <Sec title="Top NZ Universities & Polytechnics for Filipinos">
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(270px,1fr))', gap:12 }}>
+                {UNIVERSITIES.map((u,i) => (
+                  <a key={i} href={u.url} target="_blank" rel="noopener noreferrer">
+                    <div className="ch" style={{ background:COLORS.cardBg, border:`1px solid ${COLORS.border}`, borderRadius:14, padding:'18px 18px', height:'100%', borderTop:`3px solid ${u.color}` }}>
+                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:8 }}>
+                        <div>
+                          <span className="tag" style={{ background: u.type==='University' ? '#dbeafe':'#dcfce7', color: u.type==='University' ? '#1d4ed8':'#15803d', marginBottom:6 }}>{u.type}</span>
+                          <span className="tag" style={{ background:'#f3f4f6', color:'#6b7280', marginLeft:6 }}>{u.location}</span>
+                        </div>
+                        <span className="it" style={{ fontSize:11, color:COLORS.dimmed }}>{u.ranking}</span>
+                      </div>
+                      <h3 className="pf" style={{ fontSize:16, fontWeight:700, color:COLORS.navy, marginBottom:10 }}>{u.name}</h3>
+                      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6, marginBottom:10 }}>
+                        <div style={{ background:'#f8fafc', borderRadius:8, padding:'8px 10px' }}>
+                          <div className="it" style={{ fontSize:10, color:COLORS.dimmed, marginBottom:2 }}>IELTS Min.</div>
+                          <div className="it" style={{ fontSize:13, fontWeight:700, color:COLORS.teal }}>{u.ielts}</div>
+                        </div>
+                        <div style={{ background:'#f8fafc', borderRadius:8, padding:'8px 10px' }}>
+                          <div className="it" style={{ fontSize:10, color:COLORS.dimmed, marginBottom:2 }}>Fees/year</div>
+                          <div className="it" style={{ fontSize:12, fontWeight:700, color:COLORS.red }}>{u.fees}</div>
+                        </div>
+                      </div>
+                      <div className="it" style={{ fontSize:11.5, color:COLORS.muted, marginBottom:8 }}>
+                        <strong>Popular courses:</strong> {u.popular.join(', ')}
+                      </div>
+                      <div className="it" style={{ fontSize:11, color:COLORS.blue, fontWeight:600 }}>Visit website ↗</div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </Sec>
+
+            {/* Work rules */}
+            <Sec title="How Many Hours Can You Work as a Student?">
+              <div className="sx">
+                <table style={{ width:'100%', borderCollapse:'collapse', minWidth:460 }}>
+                  <thead><tr style={{ background:COLORS.navy }}>
+                    {['Situation','Hours Allowed','Notes'].map(h => <th key={h} className="it" style={{ padding:'11px 16px', color:COLORS.white, textAlign:'left', fontSize:12.5, fontWeight:600 }}>{h}</th>)}
+                  </tr></thead>
+                  <tbody>
+                    {WORK_RULES.map((r,i) => (
+                      <tr key={i} style={{ background: i%2===0 ? COLORS.cardBg : '#fdf6ee', borderBottom:`1px solid ${COLORS.border}` }}>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:13 }}>{r.rule}</td>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:13, fontWeight:700, color:COLORS.teal }}>{r.hours}</td>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:12, color:COLORS.muted }}>{r.note}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ background:'#fef3c7', border:'1px solid #fbbf24', borderRadius:10, padding:'12px 16px', marginTop:12 }}>
+                <span className="it" style={{ fontSize:13, color:'#92400e' }}>💰 At NZ minimum wage (~$23/hr) × 20 hrs/week = approx. <strong>$460/week</strong> to help cover living costs during term time.</span>
+              </div>
+            </Sec>
+
+            {/* Costs */}
+            <Sec title="Cost of Studying in NZ — What to Budget">
+              <div className="sx">
+                <table style={{ width:'100%', borderCollapse:'collapse', minWidth:500 }}>
+                  <thead><tr style={{ background:COLORS.navy }}>
+                    {['Expense','Low Estimate','High Estimate','Notes'].map(h => <th key={h} className="it" style={{ padding:'11px 16px', color:COLORS.white, textAlign:'left', fontSize:12.5, fontWeight:600 }}>{h}</th>)}
+                  </tr></thead>
+                  <tbody>
+                    {STUDENT_COSTS.map((c,i) => (
+                      <tr key={i} style={{ background: i%2===0 ? COLORS.cardBg : '#fdf6ee', borderBottom:`1px solid ${COLORS.border}` }}>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:13 }}>{c.item}</td>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:13, fontWeight:600, color:COLORS.green }}>{c.low}</td>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:13, fontWeight:600, color:COLORS.red }}>{c.high}</td>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:12, color:COLORS.muted }}>{c.note}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ background:'#f0fdf4', border:'1px solid #86efac', borderRadius:10, padding:'12px 16px', marginTop:12 }}>
+                <span className="it" style={{ fontSize:13, color:'#14532d' }}>💡 <strong>Tip for Filipinos:</strong> Southern Institute of Technology (SIT) in Invercargill offers some of the most affordable tuition in NZ and has a growing Filipino student community.</span>
+              </div>
+            </Sec>
+
+            {/* Post-study to residency */}
+            <Sec title="From Graduate to Resident — The Points">
+              <div style={{ background:`linear-gradient(135deg,#0f2744,#1a3a5c)`, borderRadius:16, padding:'24px 24px' }}>
+                <div className="tag" style={{ background:'#ffffff18', color:COLORS.goldLight, marginBottom:14 }}>Skilled Migrant Category — Points from Study</div>
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', gap:10 }}>
+                  {[
+                    { pts:'+50', label:'NZ Bachelor degree or higher', color:'#34d399' },
+                    { pts:'+10', label:'NZ diploma or trade qualification', color:'#60a5fa' },
+                    { pts:'+50', label:'Skilled job offer in NZ', color:'#f59e0b' },
+                    { pts:'+30', label:'2+ years NZ work experience', color:'#c084fc' },
+                    { pts:'+20', label:'NZ job offer outside Auckland', color:'#fb7185' },
+                    { pts:'160', label:'Points threshold to be invited', color:'#fbbf24' },
+                  ].map((p,i) => (
+                    <div key={i} style={{ background:'#ffffff0d', borderRadius:10, padding:'12px 14px', display:'flex', gap:10, alignItems:'center' }}>
+                      <div className="pf" style={{ fontSize:20, fontWeight:800, color:p.color, flexShrink:0, minWidth:50 }}>{p.pts}</div>
+                      <div className="it" style={{ fontSize:12.5, color:'#94a3b8', lineHeight:1.4 }}>{p.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <p className="it" style={{ color:'#64748b', fontSize:12, marginTop:16 }}>* Points simplified for illustration. Full criteria at immigration.govt.nz. Subject to change.</p>
+              </div>
+            </Sec>
+
+            <Sec title="Student Pathway Links">
+              <LinkGrid items={LINKS.find(l=>l.category.includes('Student')).items} color={COLORS.blue} />
             </Sec>
           </div>
         )}
@@ -505,18 +666,35 @@ export default function PathwayNZ() {
               ))}
             </div>
           </div>
-          <div style={{ borderTop:'1px solid #1e3a5c', paddingTop:16, display:'flex', justifyContent:'space-between', flexWrap:'wrap', gap:8 }}>
-            <p className="it" style={{ color:'#334155', fontSize:11 }}>
-              Built with ❤️ by{' '}
-              <a href="https://wesstech.xyz" target="_blank" rel="noopener noreferrer" style={{ color: COLORS.goldLight }}>wesstech.xyz</a>
-              {' '}· pathway.wesstech.xyz
-            </p>
-            <p className="it" style={{ color:'#334155', fontSize:11 }}>
-              For visa advice consult a{' '}
-              <a href="https://www.iaa.govt.nz/for-migrants/how-to-find-an-adviser/" target="_blank" rel="noopener noreferrer" style={{ color:'#475569', textDecoration:'underline' }}>
-                licensed immigration adviser
+          <div style={{ borderTop:'1px solid #1e3a5c', paddingTop:16 }}>
+            <div style={{ display:'flex', justifyContent:'space-between', flexWrap:'wrap', gap:8, marginBottom:10 }}>
+              <p className="it" style={{ color:'#334155', fontSize:11 }}>
+                Built with ❤️ by{' '}
+                <a href="https://wesstech.xyz" target="_blank" rel="noopener noreferrer" style={{ color: COLORS.goldLight }}>wesstech.xyz</a>
+                {' '}· pathway.wesstech.xyz
+              </p>
+              <p className="it" style={{ color:'#334155', fontSize:11 }}>
+                For visa advice consult a{' '}
+                <a href="https://www.iaa.govt.nz/for-migrants/how-to-find-an-adviser/" target="_blank" rel="noopener noreferrer" style={{ color:'#475569', textDecoration:'underline' }}>
+                  licensed immigration adviser
+                </a>
+              </p>
+            </div>
+            {/* Privacy & legal links — required for Google AdSense */}
+            <div style={{ display:'flex', gap:16, flexWrap:'wrap', paddingTop:8, borderTop:'1px solid #0f1f35' }}>
+              <a href="/privacy" className="it" style={{ color:'#6b7280', fontSize:12, textDecoration:'none' }}>
+                🔒 Privacy Policy
               </a>
-            </p>
+              <a href="/about" className="it" style={{ color:'#6b7280', fontSize:12, textDecoration:'none' }}>
+                ℹ️ About PathwayNZ
+              </a>
+              <a href="https://wesstech.xyz" target="_blank" rel="noopener noreferrer" className="it" style={{ color:'#6b7280', fontSize:12, textDecoration:'none' }}>
+                🌐 WessTech
+              </a>
+              <span className="it" style={{ color:'#334155', fontSize:12 }}>
+                © {new Date().getFullYear()} PathwayNZ · Free for all Filipinos
+              </span>
+            </div>
           </div>
         </div>
       </div>
