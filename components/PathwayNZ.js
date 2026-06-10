@@ -51,22 +51,201 @@ export default function PathwayNZ() {
 
       {/* ── NAV ── */}
       <nav style={{ background: COLORS.navy, position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 2px 16px rgba(0,0,0,.25)' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56, gap: 8, overflowX: 'auto' }}>
-          <button className="nb" onClick={() => nav('home')} style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-            <div style={{ width: 32, height: 32, background: COLORS.gold, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🥝</div>
+        <style>{`
+          .dd-wrap{position:relative;display:inline-block}
+          .dd-menu{position:absolute;top:calc(100% + 8px);left:0;background:#0f2744;border:1px solid #1e3a5c;border-radius:10px;min-width:200px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:200;opacity:0;pointer-events:none;transform:translateY(-6px);transition:all .18s}
+          .dd-wrap:hover .dd-menu,.dd-wrap:focus-within .dd-menu{opacity:1;pointer-events:all;transform:translateY(0)}
+          .dd-item{display:block;width:100%;text-align:left;background:none;border:none;padding:9px 14px;border-radius:7px;cursor:pointer;color:#94a3b8;font-size:13px;font-family:inherit;transition:all .15s;white-space:nowrap}
+          .dd-item:hover{background:#1e3a5c;color:#fff}
+          .dd-item.active{background:#c8922a22;color:#f0c060}
+          .nav-top-btn{background:none;border:none;cursor:pointer;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+          .nav-top-btn:hover{background:#ffffff12}
+          .nav-top-btn.active{background:#c8922a;color:#0f2744}
+          .nav-top-btn.has-active{background:#c8922a22;color:#f0c060}
+          .hamburger{display:none;background:none;border:none;cursor:pointer;padding:6px;color:#fff;font-size:22px}
+          .mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:#0f2744;z-index:300;overflow-y:auto;padding:16px}
+          .mobile-menu.open{display:block}
+          .mob-section{font-size:10px;font-weight:700;color:#475569;letter-spacing:.12em;text-transform:uppercase;padding:12px 12px 4px}
+          .mob-item{display:block;width:100%;text-align:left;background:none;border:none;padding:12px 14px;border-radius:9px;cursor:pointer;color:#94a3b8;font-size:14px;font-family:inherit;transition:all .15s}
+          .mob-item:hover,.mob-item.active{background:#1e3a5c;color:#fff}
+          .mob-item.active{color:#f0c060}
+          .chevron{font-size:10px;opacity:.6;transition:transform .15s}
+          .dd-wrap:hover .chevron{transform:rotate(180deg)}
+          @media(max-width:768px){.desktop-nav{display:none!important}.hamburger{display:block}}
+        `}</style>
+
+        <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 16px', display:'flex', alignItems:'center', justifyContent:'space-between', height:56 }}>
+
+          {/* Logo */}
+          <button className="nb" onClick={() => { nav('home'); setMobileMenu(false) }} style={{ display:'flex', alignItems:'center', gap:10, flexShrink:0 }}>
+            <div style={{ width:32, height:32, background:COLORS.gold, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16 }}>🥝</div>
             <div>
-              <div className="pf" style={{ color: COLORS.white, fontSize: 16, fontWeight: 800, lineHeight: 1 }}>PathwayNZ</div>
-              <div className="it" style={{ color: COLORS.goldLight, fontSize: 9, letterSpacing: '.12em', textTransform: 'uppercase' }}>Para sa mga Pilipino sa NZ</div>
+              <div className="pf" style={{ color:COLORS.white, fontSize:16, fontWeight:800, lineHeight:1 }}>PathwayNZ</div>
+              <div className="it" style={{ color:COLORS.goldLight, fontSize:9, letterSpacing:'.12em', textTransform:'uppercase' }}>Para sa mga Pilipino sa NZ</div>
             </div>
           </button>
-          <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
-            {NAV_ITEMS.filter(n => n.id !== 'home').map(n => (
-              <button key={n.id} className="nb it" onClick={() => nav(n.id)}
-                style={{ padding: '5px 10px', borderRadius: 7, fontSize: 12, fontWeight: 600, color: page === n.id ? COLORS.navy : '#94a3b8', background: page === n.id ? COLORS.goldLight : 'transparent', whiteSpace: 'nowrap' }}>
-                {n.icon} {n.label}
+
+          {/* Desktop nav */}
+          <div className="desktop-nav" style={{ display:'flex', alignItems:'center', gap:2 }}>
+
+            {/* IELTS / PTE dropdown */}
+            <div className="dd-wrap">
+              <button className={`nav-top-btn it ${['ielts','pte'].includes(page) ? 'has-active' : ''}`}
+                style={{ color: ['ielts','pte'].includes(page) ? '#f0c060' : '#94a3b8' }}>
+                🎓 Exam Prep <span className="chevron">▾</span>
               </button>
-            ))}
+              <div className="dd-menu">
+                <div style={{ fontSize:10, fontWeight:700, color:'#475569', letterSpacing:'.1em', textTransform:'uppercase', padding:'4px 14px 6px' }}>English Tests for NZ</div>
+                {[
+                  { id:'ielts', icon:'📝', label:'IELTS Preparation',  desc:'Academic & General Training' },
+                  { id:'pte',   icon:'💻', label:'PTE Academic Prep',  desc:'Computer-based · faster results' },
+                ].map(item => (
+                  <button key={item.id} className={`dd-item ${page===item.id ? 'active' : ''}`} onClick={() => nav(item.id)}>
+                    <span style={{ marginRight:8 }}>{item.icon}</span>
+                    <span style={{ fontWeight:600 }}>{item.label}</span>
+                    <div style={{ fontSize:11, color:'#64748b', marginTop:1, paddingLeft:22 }}>{item.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Immigration dropdown */}
+            <div className="dd-wrap">
+              <button className={`nav-top-btn it ${['immigration','student'].includes(page) ? 'has-active' : ''}`}
+                style={{ color: ['immigration','student'].includes(page) ? '#f0c060' : '#94a3b8' }}>
+                🛂 Immigration <span className="chevron">▾</span>
+              </button>
+              <div className="dd-menu">
+                <div style={{ fontSize:10, fontWeight:700, color:'#475569', letterSpacing:'.1em', textTransform:'uppercase', padding:'4px 14px 6px' }}>Visa Pathways</div>
+                {[
+                  { id:'immigration', icon:'🛂', label:'Work Visa Guide',     desc:'Skilled migrant, AEWV, family' },
+                  { id:'student',     icon:'🎒', label:'Student Pathway',     desc:'Study → work → residency' },
+                ].map(item => (
+                  <button key={item.id} className={`dd-item ${page===item.id ? 'active' : ''}`} onClick={() => nav(item.id)}>
+                    <span style={{ marginRight:8 }}>{item.icon}</span>
+                    <span style={{ fontWeight:600 }}>{item.label}</span>
+                    <div style={{ fontSize:11, color:'#64748b', marginTop:1, paddingLeft:22 }}>{item.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Life in NZ dropdown */}
+            <div className="dd-wrap">
+              <button className={`nav-top-btn it ${['settling','future'].includes(page) ? 'has-active' : ''}`}
+                style={{ color: ['settling','future'].includes(page) ? '#f0c060' : '#94a3b8' }}>
+                🏡 Life in NZ <span className="chevron">▾</span>
+              </button>
+              <div className="dd-menu">
+                <div style={{ fontSize:10, fontWeight:700, color:'#475569', letterSpacing:'.1em', textTransform:'uppercase', padding:'4px 14px 6px' }}>Living Here</div>
+                {[
+                  { id:'settling', icon:'🏡', label:'Settling In',      desc:'IRD, banking, first 30 days' },
+                  { id:'future',   icon:'🌱', label:'Your Future',      desc:'Residency, citizenship, family' },
+                ].map(item => (
+                  <button key={item.id} className={`dd-item ${page===item.id ? 'active' : ''}`} onClick={() => nav(item.id)}>
+                    <span style={{ marginRight:8 }}>{item.icon}</span>
+                    <span style={{ fontWeight:600 }}>{item.label}</span>
+                    <div style={{ fontSize:11, color:'#64748b', marginTop:1, paddingLeft:22 }}>{item.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Tools dropdown */}
+            <div className="dd-wrap">
+              <button className={`nav-top-btn it ${['cv'].includes(page) ? 'has-active' : ''}`}
+                style={{ color: ['cv'].includes(page) ? '#f0c060' : '#94a3b8' }}>
+                🛠️ Tools <span className="chevron">▾</span>
+              </button>
+              <div className="dd-menu">
+                <div style={{ fontSize:10, fontWeight:700, color:'#475569', letterSpacing:'.1em', textTransform:'uppercase', padding:'4px 14px 6px' }}>Free Tools</div>
+                {[
+                  { id:'cv',    icon:'📄', label:'CV Builder',     desc:'NZ CV — download as PDF' },
+                  { id:'links', icon:'🔗', label:'Resource Links', desc:'Official sites, OFW, jobs' },
+                ].map(item => (
+                  <button key={item.id} className={`dd-item ${page===item.id ? 'active' : ''}`}
+                    onClick={() => item.id === 'cv' ? window.open('/cv','_self') : nav(item.id)}>
+                    <span style={{ marginRight:8 }}>{item.icon}</span>
+                    <span style={{ fontWeight:600 }}>{item.label}</span>
+                    <div style={{ fontSize:11, color:'#64748b', marginTop:1, paddingLeft:22 }}>{item.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Devotion — single item */}
+            <button className={`nav-top-btn it ${page==='devotion' ? 'active' : ''}`}
+              style={{ color: page==='devotion' ? COLORS.navy : '#94a3b8' }}
+              onClick={() => nav('devotion')}>
+              🙏 Devotion
+            </button>
+
           </div>
+
+          {/* Hamburger */}
+          <button className="hamburger" onClick={() => setMobileMenu(m => !m)} aria-label="Toggle menu">
+            {mobileMenu ? '✕' : '☰'}
+          </button>
+        </div>
+
+        {/* Mobile menu */}
+        <div className={`mobile-menu ${mobileMenu ? 'open' : ''}`}>
+
+          <div className="mob-section">Main</div>
+          <button className={`mob-item ${page==='home' ? 'active' : ''}`}
+            onClick={() => { nav('home'); setMobileMenu(false) }}>
+            🏠 Home
+          </button>
+
+          <div className="mob-section">Exam Prep</div>
+          {[
+            { id:'ielts', icon:'📝', label:'IELTS Preparation' },
+            { id:'pte',   icon:'💻', label:'PTE Academic Prep' },
+          ].map(item => (
+            <button key={item.id} className={`mob-item ${page===item.id ? 'active' : ''}`}
+              onClick={() => { nav(item.id); setMobileMenu(false) }}>
+              {item.icon} {item.label}
+            </button>
+          ))}
+
+          <div className="mob-section">Immigration</div>
+          {[
+            { id:'immigration', icon:'🛂', label:'Work Visa Guide' },
+            { id:'student',     icon:'🎒', label:'Student Pathway' },
+          ].map(item => (
+            <button key={item.id} className={`mob-item ${page===item.id ? 'active' : ''}`}
+              onClick={() => { nav(item.id); setMobileMenu(false) }}>
+              {item.icon} {item.label}
+            </button>
+          ))}
+
+          <div className="mob-section">Life in NZ</div>
+          {[
+            { id:'settling', icon:'🏡', label:'Settling In NZ' },
+            { id:'future',   icon:'🌱', label:'Your Future in NZ' },
+          ].map(item => (
+            <button key={item.id} className={`mob-item ${page===item.id ? 'active' : ''}`}
+              onClick={() => { nav(item.id); setMobileMenu(false) }}>
+              {item.icon} {item.label}
+            </button>
+          ))}
+
+          <div className="mob-section">Tools & Resources</div>
+          {[
+            { id:'cv',      icon:'📄', label:'CV Builder',      href:'/cv' },
+            { id:'links',   icon:'🔗', label:'Resource Links',  href:null },
+            { id:'devotion',icon:'🙏', label:'Daily Devotion',  href:null },
+          ].map(item => (
+            <button key={item.id} className={`mob-item ${page===item.id ? 'active' : ''}`}
+              onClick={() => {
+                if (item.href) { window.open(item.href,'_self') }
+                else { nav(item.id) }
+                setMobileMenu(false)
+              }}>
+              {item.icon} {item.label}
+            </button>
+          ))}
+
         </div>
       </nav>
 
@@ -118,7 +297,8 @@ export default function PathwayNZ() {
             <Sec title="Lahat ng Kailangan Mo — Everything You Need">
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 12 }}>
                 {[
-                  { id:'ielts',       icon:'🎓', title:'IELTS Prep',         desc:'Band guides, tips for all 4 skills, 4-week study plan',              color: COLORS.teal   },
+                  { id:'ielts',       icon:'📝', title:'IELTS Prep',         desc:'Band guides, tips for all 4 skills, 4-week study plan',              color: COLORS.teal   },
+                  { id:'pte',         icon:'💻', title:'PTE Academic Prep',  desc:'PTE scores, tips for all 5 skills, computer-based test guide',       color: COLORS.blue   },
                   { id:'immigration', icon:'🛂', title:'NZ Immigration',     desc:'Visa types, step-by-step guides, document checklists',               color: COLORS.red    },
                   { id:'student',     icon:'🎒', title:'Student Pathway',    desc:'Study in NZ, student visa, post-study work, path to residency',      color: COLORS.blue   },
                   { id:'settling',    icon:'🏡', title:'Settling In NZ',     desc:'IRD, banking, cost of living in NZD & PHP, Filipino communities',    color: COLORS.gold   },
@@ -216,7 +396,200 @@ export default function PathwayNZ() {
           </div>
         )}
 
-        {/* ══ IMMIGRATION ══ */}
+        )}
+
+        {/* ══ PTE ══ */}
+        {page === 'pte' && (
+          <div className="fi" style={{ paddingTop:40 }}>
+            <PageHeader icon="💻" tag="PTE Academic Preparation" title="I-Pass ang PTE Mo" subtitle="PTE Academic is accepted for all NZ visas — computer-based, faster results, and often easier for Filipinos." color={COLORS.blue} />
+
+            {/* IELTS vs PTE comparison */}
+            <Sec title="IELTS vs PTE — Which Should You Take?">
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))', gap:12, marginBottom:16 }}>
+                {[
+                  { name:'IELTS', color:COLORS.teal, pros:['Widely recognised worldwide','Paper or computer option','More test centres in Philippines','Familiar format for most Filipinos'], cons:['Results take 3–13 days','Human marker for Speaking/Writing','Test centres in Manila, Cebu, Davao only'] },
+                  { name:'PTE Academic', color:COLORS.blue, pros:['Results in 48 hours — much faster','Fully computer-marked — no human bias','Available in more Philippine cities','Easier Speaking for Filipino accents'], cons:['Less familiar format','Computer Speaking can feel unnatural','Fewer test centres globally'] },
+                ].map((t,i) => (
+                  <div key={i} style={{ background:COLORS.cardBg, border:`1.5px solid ${t.color}44`, borderRadius:14, padding:'20px 18px', borderTop:`3px solid ${t.color}` }}>
+                    <h3 className="pf" style={{ fontSize:18, fontWeight:700, color:t.color, marginBottom:12 }}>{t.name}</h3>
+                    <div className="it" style={{ fontSize:11, fontWeight:700, color:COLORS.green, marginBottom:6, textTransform:'uppercase', letterSpacing:'.08em' }}>✓ Advantages</div>
+                    {t.pros.map((p,j) => (
+                      <div key={j} className="it" style={{ fontSize:13, color:COLORS.muted, marginBottom:5, display:'flex', gap:8 }}>
+                        <span style={{ color:COLORS.green, flexShrink:0 }}>+</span>{p}
+                      </div>
+                    ))}
+                    <div className="it" style={{ fontSize:11, fontWeight:700, color:COLORS.red, margin:'10px 0 6px', textTransform:'uppercase', letterSpacing:'.08em' }}>✗ Disadvantages</div>
+                    {t.cons.map((c,j) => (
+                      <div key={j} className="it" style={{ fontSize:13, color:COLORS.muted, marginBottom:5, display:'flex', gap:8 }}>
+                        <span style={{ color:COLORS.red, flexShrink:0 }}>−</span>{c}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              <div style={{ background:'#dbeafe', border:'1px solid #93c5fd', borderRadius:10, padding:'12px 16px' }}>
+                <span className="it" style={{ fontSize:13.5, color:'#1e40af' }}>
+                  💡 <strong>Tip for Filipinos:</strong> Many Filipinos find PTE Speaking easier because the computer doesn't judge your accent — it scores pronunciation, fluency, and content separately. If you've failed IELTS Speaking before, try PTE.
+                </span>
+              </div>
+            </Sec>
+
+            {/* PTE Score guide */}
+            <Sec title="PTE Score Guide for NZ Visas">
+              <div className="sx">
+                <table style={{ width:'100%', borderCollapse:'collapse', minWidth:480 }}>
+                  <thead><tr style={{ background:COLORS.navy }}>
+                    {['PTE Score','IELTS Equivalent','NZ Visa Eligibility'].map(h => <th key={h} className="it" style={{ padding:'11px 16px', color:COLORS.white, textAlign:'left', fontSize:13, fontWeight:600 }}>{h}</th>)}
+                  </tr></thead>
+                  <tbody>
+                    {[
+                      { pte:'36–42',  ielts:'5.0', visa:'Some student visas',         color:'#ef4444' },
+                      { pte:'42–50',  ielts:'5.5', visa:'Some work visas',            color:'#f97316' },
+                      { pte:'50–58',  ielts:'6.0', visa:'Essential Skills Work Visa', color:'#eab308' },
+                      { pte:'58–65',  ielts:'6.5', visa:'Most skilled worker visas',  color:'#22c55e' },
+                      { pte:'65–79',  ielts:'7.0', visa:'Skilled Migrant Category',   color:'#14b8a6' },
+                      { pte:'79+',    ielts:'7.5+',visa:'Fast-track residency',       color:'#6366f1' },
+                    ].map((b,i) => (
+                      <tr key={i} style={{ background: i%2===0 ? COLORS.cardBg : '#f8fafc', borderBottom:`1px solid ${COLORS.border}` }}>
+                        <td style={{ padding:'11px 16px' }}><span className="it" style={{ background:b.color, color:'#fff', borderRadius:7, padding:'3px 12px', fontWeight:800, fontSize:15 }}>{b.pte}</span></td>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:13.5, color:COLORS.muted }}>≈ IELTS {b.ielts}</td>
+                        <td className="it" style={{ padding:'11px 16px', fontSize:13.5, color:COLORS.text, fontWeight:500 }}>{b.visa}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="it" style={{ fontSize:11.5, color:COLORS.dimmed, marginTop:8 }}>* Score equivalencies are approximate. Always confirm with Immigration NZ for your specific visa type.</p>
+            </Sec>
+
+            {/* PTE format */}
+            <Sec title="PTE Academic Test Format">
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', gap:10 }}>
+                {[
+                  { part:'Part 1 — Speaking & Writing', duration:'77–93 min', color:COLORS.red, tasks:['Read Aloud','Repeat Sentence','Describe Image','Re-tell Lecture','Answer Short Question','Summarise Written Text','Write Essay'] },
+                  { part:'Part 2 — Reading',            duration:'32–41 min', color:COLORS.gold, tasks:['Fill in the Blanks','Multiple Choice','Re-order Paragraphs','Reading & Writing Fill in Blanks'] },
+                  { part:'Part 3 — Listening',          duration:'45–57 min', color:COLORS.violet, tasks:['Summarise Spoken Text','Multiple Choice','Fill in the Blanks','Highlight Correct Summary','Select Missing Word','Highlight Incorrect Words','Write from Dictation'] },
+                ].map((p,i) => (
+                  <div key={i} style={{ background:COLORS.cardBg, border:`1px solid ${COLORS.border}`, borderRadius:12, padding:'16px 16px', borderLeft:`4px solid ${p.color}` }}>
+                    <div className="it" style={{ fontSize:12, fontWeight:700, color:p.color, marginBottom:4 }}>{p.part}</div>
+                    <div className="tag" style={{ background:p.color+'18', color:p.color, marginBottom:10 }}>{p.duration}</div>
+                    {p.tasks.map((t,j) => (
+                      <div key={j} className="it" style={{ fontSize:12, color:COLORS.muted, marginBottom:5, display:'flex', gap:7 }}>
+                        <span style={{ color:p.color, flexShrink:0 }}>·</span>{t}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              <div style={{ background:'#fef3c7', border:'1px solid #fbbf24', borderRadius:10, padding:'12px 16px', marginTop:12 }}>
+                <span className="it" style={{ fontSize:13, color:'#92400e' }}>⏱️ Total test time: approximately 2 hours 30 minutes. No breaks.</span>
+              </div>
+            </Sec>
+
+            {/* PTE Tips */}
+            <Sec title="PTE Tips by Skill — Click to Expand">
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))', gap:12 }}>
+                {[
+                  { icon:'🎙️', color:COLORS.red, title:'Speaking', sub:'Read Aloud + Describe Image',
+                    tips:['Speak clearly and at a natural pace — do not rush or pause too long.','For Read Aloud: stress content words, not function words.','For Describe Image: use a fixed template — Trend/Pattern → Key points → Conclusion.','The microphone opens automatically — start speaking within 3 seconds.','Practise with a timer — you get limited time per question.'] },
+                  { icon:'✍️', color:COLORS.teal, title:'Writing', sub:'Summarise + Essay',
+                    tips:["For Summarise Written Text: write ONE sentence of 5–75 words. Don't exceed this.","For Essay: write 200–300 words. Under 200 = automatic score penalty.",'Use linking words: Furthermore, However, In contrast, As a result.','Avoid bullet points in essays — write full paragraphs only.','Spell-check mentally — PTE spelling errors lower your score.'] },
+                  { icon:'📖', color:COLORS.gold, title:'Reading', sub:'Fill Blanks + Reorder',
+                    tips:['For Fill in the Blanks: read the whole paragraph first, then fill.','For Re-order Paragraphs: find the topic sentence first — it usually introduces a new idea.','Multiple Choice: eliminate wrong answers first rather than finding the right one.','Time management is critical — Reading has a strict overall time limit.','Skim for the main idea, scan for specific answers.'] },
+                  { icon:'👂', color:COLORS.violet, title:'Listening', sub:'Write from Dictation',
+                    tips:['Write from Dictation is the highest-scoring item — practise it daily.','For Summarise Spoken Text: take notes as you listen using abbreviations.','Highlight Incorrect Words: follow along word by word — do not read ahead.','Select Missing Word: predict the word type before the audio ends.','Listen to podcasts, BBC, and NZ news daily to train your ear.'] },
+                ].map((s,i) => (
+                  <div key={i} className="ch" onClick={() => setActiveIelts(activeIelts===i+10 ? null : i+10)}
+                    style={{ background:COLORS.cardBg, border:`1.5px solid ${activeIelts===i+10 ? s.color : COLORS.border}`, borderRadius:14, padding:'20px 18px', borderLeft:`4px solid ${s.color}` }}>
+                    <div style={{ fontSize:26, marginBottom:8 }}>{s.icon}</div>
+                    <h3 className="pf" style={{ fontSize:19, fontWeight:700, color:COLORS.navy }}>{s.title}</h3>
+                    <div className="tag" style={{ background:s.color+'18', color:s.color, marginTop:6, marginBottom: activeIelts===i+10 ? 14:0 }}>{s.sub}</div>
+                    {activeIelts===i+10 && (
+                      <ul style={{ listStyle:'none', paddingLeft:0, marginTop:10 }}>
+                        {s.tips.map((t,j) => (
+                          <li key={j} className="it" style={{ fontSize:13.5, color:COLORS.muted, marginBottom:9, paddingLeft:18, position:'relative', lineHeight:1.6 }}>
+                            <span style={{ position:'absolute', left:0, color:s.color, fontWeight:700 }}>✓</span>{t}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div className="it" style={{ fontSize:11, color:COLORS.dimmed, marginTop:10 }}>{activeIelts===i+10 ? '▲ collapse':'▼ show tips'}</div>
+                  </div>
+                ))}
+              </div>
+            </Sec>
+
+            {/* 4-week PTE study plan */}
+            <Sec title="4-Week PTE Study Plan (1 hour/day)">
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(210px,1fr))', gap:10 }}>
+                {[
+                  { week:'Week 1', focus:'Format & Listening', color:COLORS.teal,   tasks:['Learn the PTE test format inside out','Daily: 5 Write from Dictation exercises','Daily: listen to 1 podcast or news audio','Install the Pearson PTE app — free practice'] },
+                  { week:'Week 2', focus:'Speaking & Writing',  color:COLORS.blue,   tasks:['Daily: 3 Read Aloud exercises','Daily: 1 Describe Image using a template','Write 1 Essay of 250 words','Summarise 1 written text in 1 sentence'] },
+                  { week:'Week 3', focus:'Reading',   color:COLORS.gold,    tasks:['Daily: Fill in the Blanks practice','Daily: Re-order Paragraphs x3','Timed reading practice — strict time limits','Vocabulary building: 10 academic words/day'] },
+                  { week:'Week 4', focus:'Full Mock Tests', color:COLORS.violet, tasks:['1 full PTE mock test per day (Scored Practice)','Review every wrong answer in detail','Focus extra time on your weakest skill','Rest the day before — sleep is essential'] },
+                ].map((w,i) => (
+                  <div key={i} style={{ background:COLORS.cardBg, border:`1px solid ${COLORS.border}`, borderRadius:12, padding:'18px 16px' }}>
+                    <div className="tag" style={{ background:w.color+'18', color:w.color, marginBottom:8 }}>{w.week}</div>
+                    <h4 className="pf" style={{ fontSize:15, fontWeight:700, color:COLORS.navy, marginBottom:10 }}>{w.focus}</h4>
+                    {w.tasks.map((t,j) => (
+                      <div key={j} className="it" style={{ fontSize:12.5, color:COLORS.muted, marginBottom:6, display:'flex', gap:7 }}>
+                        <span style={{ color:w.color, flexShrink:0 }}>→</span>{t}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </Sec>
+
+            {/* Where to register in Philippines */}
+            <Sec title="Where to Take PTE in the Philippines">
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', gap:10 }}>
+                {[
+                  { city:'Manila',     centres:'Multiple Pearson VUE centres', note:'BGC, Makati, Ortigas, Quezon City' },
+                  { city:'Cebu',       centres:'Pearson VUE Cebu', note:'IT Park and SM Seaside' },
+                  { city:'Davao',      centres:'Pearson VUE Davao', note:'Abreeza Mall area' },
+                  { city:'Iloilo',     centres:'Pearson VUE Iloilo', note:'Available — check Pearson VUE site' },
+                  { city:'Pampanga',   centres:'Pearson VUE Angeles', note:'Available — check Pearson VUE site' },
+                  { city:'Online',     centres:'PTE at Home', note:'Take from home — requires webcam + quiet room' },
+                ].map((c,i) => (
+                  <div key={i} style={{ background:COLORS.cardBg, border:`1px solid ${COLORS.border}`, borderRadius:12, padding:'14px 16px', borderLeft:`3px solid ${COLORS.blue}` }}>
+                    <div className="it" style={{ fontWeight:700, color:COLORS.navy, fontSize:14, marginBottom:4 }}>{c.city}</div>
+                    <div className="it" style={{ fontSize:12.5, color:COLORS.muted, marginBottom:3 }}>{c.centres}</div>
+                    <div className="it" style={{ fontSize:11.5, color:COLORS.dimmed }}>{c.note}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop:14 }}>
+                <a href="https://home.pearsonvue.com/pte" target="_blank" rel="noopener noreferrer"
+                  style={{ display:'inline-block', background:COLORS.blue, color:'#fff', borderRadius:9, padding:'10px 20px', fontSize:13, fontWeight:600, textDecoration:'none', fontFamily:'inherit' }}>
+                  Book PTE at Pearson VUE → pearsonvue.com
+                </a>
+              </div>
+            </Sec>
+
+            {/* Free resources */}
+            <Sec title="Free PTE Practice Resources">
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(250px,1fr))', gap:9 }}>
+                {[
+                  { name:'PTE Academic Official Practice', url:'https://www.pearsonpte.com/preparation', desc:'Free scored mini test from Pearson — the official test maker' },
+                  { name:'E2Language PTE — YouTube',       url:'https://www.youtube.com/@E2PTEAcademic', desc:'Most popular free PTE prep channel — Filipino-friendly lessons' },
+                  { name:'PTE Study – Free Practice',      url:'https://www.ptestudy.com', desc:'Free PTE practice questions for all task types' },
+                  { name:'Pearson VUE Test Centre Finder', url:'https://home.pearsonvue.com/pte/locate', desc:'Find the nearest PTE test centre in the Philippines' },
+                  { name:'IELTS Liz (also covers PTE)',    url:'https://ieltsliz.com', desc:'Tips that apply to both IELTS and PTE Writing and Reading' },
+                  { name:'PTE at Home – Take from Home',   url:'https://www.pearsonpte.com/pte-academic/pte-academic-online', desc:'Online proctored PTE — take the test from home' },
+                ].map((item,i) => (
+                  <a key={i} href={item.url} target="_blank" rel="noopener noreferrer">
+                    <div className="ch" style={{ background:COLORS.cardBg, border:`1px solid ${COLORS.border}`, borderRadius:12, padding:'14px 16px', height:'100%', borderLeft:`3px solid ${COLORS.blue}` }}>
+                      <div className="it" style={{ fontWeight:600, color:COLORS.navy, fontSize:13.5, marginBottom:3 }}>{item.name}</div>
+                      <div className="it" style={{ fontSize:12, color:COLORS.muted, lineHeight:1.5, marginBottom:7 }}>{item.desc}</div>
+                      <div className="it" style={{ fontSize:11, color:COLORS.blue, fontWeight:600 }}>{item.url.replace('https://','').split('/')[0]} ↗</div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </Sec>
+
+          </div>
         {page === 'immigration' && (
           <div className="fi" style={{ paddingTop:40 }}>
             <PageHeader icon="🛂" tag="NZ Immigration Guide" title="Paano Makakuha ng Visa sa NZ" subtitle="Plain English guides written for Filipinos — walang jargon, walang kalituhan." color={COLORS.red} />
@@ -594,13 +967,22 @@ export default function PathwayNZ() {
               {!votdLoading && (
                 <>
                   <div style={{ marginBottom:22 }}>
-                    <div className="tag" style={{ background:'#c8922a18', color: COLORS.goldLight, marginBottom:12 }}>Reflection for Today</div>
-                    <p className="it" style={{ color:'#cbd5e1', fontSize:14.5, lineHeight:1.9 }}>{todayReflection.text}</p>
+                    <div className="tag" style={{ background:'#c8922a18', color: COLORS.goldLight, marginBottom:12 }}>
+                      Reflection · Pagninilay
+                    </div>
+                    <p className="it" style={{ color:'#cbd5e1', fontSize:14.5, lineHeight:1.9 }}>
+                      {devotionLang === 'en' ? todayReflection.en : todayReflection.tl}
+                    </p>
                   </div>
                   <div style={{ background:'#ffffff0a', borderRadius:12, padding:'18px 18px', borderTop:`2px solid ${COLORS.gold}33` }}>
-                    <div className="tag" style={{ background:'#7c3aed18', color:'#c4b5fd', marginBottom:10 }}>A Prayer for Migrants</div>
+                    <div className="tag" style={{ background:'#7c3aed18', color:'#c4b5fd', marginBottom:10 }}>
+                      {devotionLang === 'en' ? 'A Prayer for Migrants' : 'Panalangin para sa mga Migrante'}
+                    </div>
                     <p className="it" style={{ color:'#e2e8f0', fontSize:13.5, lineHeight:1.9, fontStyle:'italic' }}>
-                      Panginoon, salamat sa salitang ito ngayon. Habang itinatayo ko ang aking buhay sa New Zealand, paalaala Mo sa akin na kasama Mo ako sa bawat hakbang — sa bawat papel na pinupunan ko, bawat trabaho, bawat gabing namimiss ko ang aking pamilya sa Pilipinas. Bigyan Mo ako ng lakas ngayon at pag-asa bukas. Pagpalain ang aking pamilya saan man sila naroroon. Amen. / Lord, thank You for this word today. As I build my life in New Zealand, remind me that You walk with me in every step — every form I fill, every shift I work, every night I miss my family in the Philippines. Give me strength for today and hope for tomorrow. Bless my family wherever they are. Amen.
+                      {devotionLang === 'en'
+                        ? 'Lord, thank You for this word today. As I build my life in New Zealand, remind me that You walk with me in every step — every form I fill, every shift I work, every night I miss my family in the Philippines. Give me strength for today and hope for tomorrow. Bless my family wherever they are. Amen.'
+                        : 'Panginoon, salamat sa salitang ito ngayon. Habang itinatayo ko ang aking buhay sa New Zealand, paalaala Mo sa akin na kasama Mo ako sa bawat hakbang — sa bawat papel na pinupunan ko, bawat trabaho, bawat gabing namimiss ko ang aking pamilya sa Pilipinas. Bigyan Mo ako ng lakas ngayon at pag-asa bukas. Pagpalain ang aking pamilya saan man sila naroroon. Amen.'
+                      }
                     </p>
                   </div>
                 </>
