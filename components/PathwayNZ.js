@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { COLORS, NAV_ITEMS, LINKS, IELTS_SECTIONS, BAND_GUIDE, VISA_TYPES, COST_OF_LIVING, REFLECTIONS, FILIPINO_STATS, UNIVERSITIES, STUDENT_COSTS, STUDENT_PATHWAY_STEPS, WORK_RULES } from '../lib/data'
+import { COLORS, NAV_ITEMS, LINKS, IELTS_SECTIONS, BAND_GUIDE, VISA_TYPES, COST_OF_LIVING, REFLECTIONS, FILIPINO_STATS} from '../lib/data'
 
 export default function PathwayNZ() {
   const [page, setPage]             = useState('home')
@@ -10,6 +10,7 @@ export default function PathwayNZ() {
   const [votdLoading, setVotdLoading] = useState(false)
   const [votdError, setVotdError]   = useState(false)
   const [activeLink, setActiveLink] = useState(null)
+  const [mobileMenu, setMobileMenu] = useState(false)
 
   // Use day of month (1–31) so reflection changes every calendar day
   const dayOfMonth = new Date().getDate() // 1–31
@@ -396,7 +397,7 @@ export default function PathwayNZ() {
           </div>
         )}
 
-        )}
+        
 
         {/* ══ PTE ══ */}
         {page === 'pte' && (
