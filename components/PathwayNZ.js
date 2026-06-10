@@ -304,7 +304,8 @@ export default function PathwayNZ() {
                   { id:'settling',    icon:'🏡', title:'Settling In NZ',     desc:'IRD, banking, cost of living in NZD & PHP, Filipino communities',    color: COLORS.gold   },
                   { id:'future',      icon:'🌱', title:'Your Future in NZ',  desc:'Residency pathway, citizenship, bringing family to NZ',              color: COLORS.green  },
                   { id:'devotion',    icon:'🙏', title:'Daily Devotion',     desc:'Live Bible verse + reflection in English & Tagalog — for Filipinos', color: COLORS.violet },
-                  { id:'links',       icon:'🔗', title:'Filipino Links',     desc:'PH Consulate, OFW groups, IELTS PH, remittance, job boards',        color: COLORS.navy   },
+                  { id: 'links', icon: '🔗', title: 'Filipino Links', desc: 'PH Consulate, OFW groups, IELTS PH, remittance, job boards', color: COLORS.navy },
+                  { id:'cv', icon:'📄', title:'CV Builder', desc:'Build a free NZ CV — download as PDF', color: COLORS.blue },
                 ].map(c => (
                   <div key={c.id} className="ch" onClick={() => nav(c.id)}
                     style={{ background: COLORS.cardBg, border: `1.5px solid ${COLORS.border}`, borderRadius: 16, padding: '20px 16px', borderTop: `3px solid ${c.color}` }}>
