@@ -1,0 +1,13 @@
+{
+  "name": "PathwayNZ",
+  "short_name": "PathwayNZ",
+  "description": "Your guide to a new life in New Zealand — para sa mga Pilipino",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#0f2744",
+  "background_color": "#fdf6ee",
+  "display": "standalone",
+  "start_url": "/"
+}
